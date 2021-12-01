@@ -4,21 +4,26 @@
 # Sketch in a generic class for holding the input
 class Problem():
     def __init__(self, filename):
-        strings = []
         integers = []
         with open(filename, "r") as file:
             for line in file:
-                strings.append(line)
                 integers.append(int(line))
-        self.strings = strings
         self.integers = integers
+        self.threesums = self.slidingwindow(integers, 3)
         return
+    
+    def slidingwindow(self, measurements, windowsize):
+        windows = [0] * (len(measurements) - windowsize + 1)
+        for i in range(len(windows)):
+            for j in measurements[i:i+windowsize]:
+                windows[i] += j
+        return windows
 
 def main():
     total = 0
     p = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day01\\input.txt")
     previous = -1
-    for i in p.integers:
+    for i in p.threesums:
         if previous == -1:
             print("N/A - no previous measurement")
         elif i > previous:
