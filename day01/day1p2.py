@@ -1,7 +1,8 @@
 #!/usr/bin/python3
-# Day 1, Part 1 of Advent of Code 2021
+# Day 1, Part 2 of Advent of Code 2021
+# Sum three elements in a list and compare them to the previous sum 
 
-# Sketch in a generic class for holding the input
+# Problem() is my class that ingests the day's input and structures it for easy computation
 class Problem():
     def __init__(self, filename):
         integers = []
@@ -12,6 +13,7 @@ class Problem():
         self.threesums = self.slidingwindow(integers, 3)
         return
     
+    # slidingwindow computes the sum of 'windowsize' elements in a list of measurements
     def slidingwindow(self, measurements, windowsize):
         windows = [0] * (len(measurements) - windowsize + 1)
         for i in range(len(windows)):
@@ -20,9 +22,14 @@ class Problem():
         return windows
 
 def main():
-    total = 0
+    # Ingest and structure the data
     p = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day01\\input.txt")
+
+    # Set globals and state variables 
+    total = 0
     previous = -1
+
+    # Compute the solution 
     for i in p.threesums:
         if previous == -1:
             print("N/A - no previous measurement")

@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 # Day 1, Part 1 of Advent of Code 2021
+# Measure how many times the depth increased in a list of sonar measurements
 
-# Sketch in a generic class for holding the input
+# Problem() is my class that ingests the day's input and structures it for easy computation
 class Problem():
     def __init__(self, filename):
-        strings = []
+        strings = [] # We don't need strings in this chapter but it's a neat feature
         integers = []
         with open(filename, "r") as file:
             for line in file:
@@ -15,9 +16,14 @@ class Problem():
         return
 
 def main():
-    total = 0
+    # Ingest and format the data
     p = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day01\\input.txt")
+
+    # Set up state variables 
+    total = 0
     previous = -1
+
+    # Compute an answer
     for i in p.integers:
         if previous == -1:
             print("N/A - no previous measurement")
