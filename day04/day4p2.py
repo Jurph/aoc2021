@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-# Day 4, Part 1 of Advent of Code 2021
-# Playing BINGO with a giant kraken
+# Day 4, Part 2 of Advent of Code 2021
+# Playing BINGO with a giant kraken ... to lose! 
 
 # BingoGame() is my class that ingests the day's input and structures it for easy computation
 class BingoGame():
@@ -8,23 +8,26 @@ class BingoGame():
         boards = []
         rows = []
         with open(filename, "r") as file:
+            # Assign the "callouts" - the numbers that will be called during the game
             callouts = list(map(int, file.readline().split(",")))
-            file.readline()
+            file.readline() # Eat a random blank line 
             cards = file.readlines()
-            # TODO: figure out arbitrary line input
 
+        # Build groups of five lines into BINGO cards 
         for line in cards:
             if len(line) == 0:
                 rows = []
             else:
                 pass
 
-            if len(rows) < 5:
+            if len(rows) < 5: # TODO: if I were smarter I could just take these in chunks of non-newlines
                 rows.append(line.rstrip())
             else:
                 print(rows)
                 boards.append(BingoBoard(rows))
                 rows = []
+
+        # Set game variables: callouts, boards, and whether there are any winning boards in play 
         self.callouts = callouts
         self.boards = boards
         self.winners = self.countWinners()
@@ -37,6 +40,9 @@ class BingoGame():
                 winners += 1
         return winners
 
+# A BingoSquare stores its value and marking status.
+# In this game, where unmarked squares are added to score,
+# a BingoSquare can also tell you whether it contributes to the score. 
 class BingoSquare():
     def __init__(self, number:int, isMarked=False):
         self.value = number
@@ -52,12 +58,10 @@ class BingoSquare():
         self.isMarked = stamp
         return
 
+# A BingoBoard is a grid of BingoSquares
 class BingoBoard():
     def __init__(self, rowstrings):
         grid = []
-        # For input debugging
-        # TODO: remove this once the code runs
-        # print(rowstrings)
         for row in rowstrings:
             row.rstrip()
             newrow = list(map(int, row.split()))
@@ -73,6 +77,7 @@ class BingoBoard():
         self.isWinner = False
         return
 
+    # Call a number, and a BingoBoard.mark() will mark the square
     def mark(self, callout:int, stamp:bool=True):
         for row in self.grid:
             for square in row:
@@ -90,18 +95,17 @@ class BingoBoard():
 
     def checkWinner(self):
         self.isWinner = False
+
         # Check each row for five marked squares 
         for row in self.grid:
             sum = 0
             for square in row:
                 if square.isMarked:
                     sum += 1
-                    # print("Found marked square with value {}".format(square.value))
                 else:
                     pass
             if sum == self.width:
                 self.isWinner = True
-                # print("Won with a row")
             else:
                 pass
         
@@ -114,9 +118,13 @@ class BingoBoard():
                     sum += 1
             if sum == 5:
                 self.isWinner = True
-                # print("Won with column {}".format(j))
+
+        # At least in this version, diagonals don't count 
+        # TODO: prepare for a version where they do? 
         return
 
+    # A method for pretty-printing a BingoBoard
+    # Marks squares in cyan and reports its score and/or win status 
     def print(self):
         for row in self.grid:
             rowstring = "   "
@@ -137,7 +145,6 @@ class BingoBoard():
 def main():
     filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\input.txt"
     game = BingoGame(filename)
-    highscore = 0
     winners = 0
     for number in game.callouts:
         print("Calling {} now...".format(number))
@@ -156,9 +163,6 @@ def main():
                 pass
         if winners > 0:
             return
-            
-        # j = input()
-    print("High score: {}".format(highscore))
     return
 
 
