@@ -2,8 +2,6 @@
 # Day 3, Part 1 of Advent of Code 2021
 # Measure the most common bit(s) in a binary string 
 
-import binascii
-
 # Problem() is my class that ingests the day's input and structures it for easy computation
 class Problem():
     def __init__(self, filename):
