@@ -38,6 +38,9 @@ class BingoSquare():
         else:
             return int(self.value)
 
+    def mark(self, stamp=True):
+        self.isMarked = stamp
+        return
 
 class BingoBoard():
     def __init__(self, rowstrings):
@@ -57,13 +60,14 @@ class BingoBoard():
         self.score = self.getScore()
         self.width = width
         self.height = height
+        self.isWinner = False
         return
 
-    def mark(self, callout:int, marking:bool=True):
+    def mark(self, callout:int, stamp:bool=True):
         for row in self.grid:
             for square in row:
                 if square.value == callout:
-                    square.isMarked = marking
+                    square.mark(stamp)
         return
 
     def getScore(self):
@@ -71,32 +75,37 @@ class BingoBoard():
         for row in self.grid:
             for square in row:
                 total += square.score()
+        self.score = total
         return total
 
-    def isWinner(self):
-        isWinner = False
+    def checkWinner(self):
+        self.isWinner = False
         # Check each row for five marked squares 
         for row in self.grid:
+            sum = 0
             for square in row:
-                sum = 0
                 if square.isMarked:
                     sum += 1
+                    # print("Found marked square with value {}".format(square.value))
+                else:
+                    pass
             if sum == self.width:
-                isWinner = True
+                self.isWinner = True
+                # print("Won with a row")
             else:
                 pass
         
         # Check each column for five marked squares
         for j in range(self.width):
+            sum = 0
             for row in self.grid:
-                sum = 0
                 square = row[j]
                 if square.isMarked:
                     sum += 1
             if sum == self.height:
-                isWinner = True
-
-        return isWinner
+                self.isWinner = True
+                # print("Won with column {}".format(j))
+        return
 
     def print(self):
         for row in self.grid:
@@ -109,20 +118,28 @@ class BingoBoard():
                 rowstring += "{0:>2} ".format(printstring)
             print(rowstring)
         print("Current score: {}".format(self.getScore()))
-        if self.isWinner():
+        self.checkWinner()
+        if self.isWinner:
             print("WINNER")
         print("\n")
         return
 
 def main():
-    input = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\test.txt"
-    game = BingoGame(input)
-    for b in game.boards:
-        for holler in game.callouts[0:12]:
-            b.mark(holler)
-        b.print()
-        if b.isWinner():
-            print("WINNER")
+    filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\test.txt"
+    game = BingoGame(filename)
+    for number in game.callouts:
+        print("Calling {} now...".format(number))
+        for b in game.boards:
+            b.mark(number)
+            b.checkWinner()
+            if b.isWinner:
+                b.getScore()
+                b.print()
+                print("Total Score: {} x {} = {}".format(b.score, number, b.score * number))
+                return
+            else:
+                pass
+        j = input()
     return
 
 
