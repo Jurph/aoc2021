@@ -6,15 +6,25 @@
 class BingoGame():
     def __init__(self, filename):
         boards = []
+        rows = []
         with open(filename, "r") as file:
             callouts = list(map(int, file.readline().split(",")))
-            while len(boards) < 3:  # TODO: work on arbitrary input length
-                file.readline().lstrip()
+            file.readline()
+            cards = file.readlines()
+            # TODO: figure out arbitrary line input
+
+        for line in cards:
+            if len(line) == 0:
                 rows = []
-                for i in range(5):
-                    row = file.readline().rstrip()
-                    rows.append(row)
+            else:
+                pass
+
+            if len(rows) < 5:
+                rows.append(line.rstrip())
+            else:
+                print(rows)
                 boards.append(BingoBoard(rows))
+                rows = []
         self.callouts = callouts
         self.boards = boards
         self.winners = 0
@@ -125,7 +135,7 @@ class BingoBoard():
         return
 
 def main():
-    filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\test.txt"
+    filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\input.txt"
     game = BingoGame(filename)
     for number in game.callouts:
         print("Calling {} now...".format(number))
@@ -139,7 +149,7 @@ def main():
                 return
             else:
                 pass
-        j = input()
+        # j = input()
     return
 
 
