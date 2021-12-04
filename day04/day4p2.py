@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # Day 4, Part 2 of Advent of Code 2021
-# Playing BINGO with a giant kraken ... to lose! 
+# Playing BINGO with a giant kraken ... to lose!
 
 # BingoGame() is my class that ingests the day's input and structures it for easy computation
 class BingoGame():
@@ -82,6 +82,7 @@ class BingoBoard():
         for row in self.grid:
             for square in row:
                 if square.value == callout:
+                    print("Marked a {}".format(callout))
                     square.mark(stamp)
         return
 
@@ -104,7 +105,7 @@ class BingoBoard():
                     sum += 1
                 else:
                     pass
-            if sum == self.width:
+            if sum == self.height:
                 self.isWinner = True
             else:
                 pass
@@ -116,7 +117,7 @@ class BingoBoard():
                 square = row[j]
                 if square.isMarked:
                     sum += 1
-            if sum == 5:
+            if sum == self.width:
                 self.isWinner = True
 
         # At least in this version, diagonals don't count 
@@ -145,24 +146,25 @@ class BingoBoard():
 def main():
     filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\input.txt"
     game = BingoGame(filename)
-    winners = 0
+    winners = []
     for number in game.callouts:
         print("Calling {} now...".format(number))
         for b in game.boards:
             b.mark(number)
             b.checkWinner()            
+
+        for b in game.boards:
             if b.isWinner:
-                winners += 1
-                b.getScore()
-                b.print()
-                print("Total Score: {} x {} = {}".format(b.score, number, b.score * number))
+                winners.append(b)
+                game.boards.remove(b)
+                lastround = number
+                print("Removed a winning board during round {} ... {} boards remain.".format(number, len(game.boards)))
                 for b in game.boards:
-                    if b.isWinner:
-                        b.print()
-            else:
-                pass
-        if winners > 0:
-            return
+                    b.print()
+    lastwinner = winners[-1]
+    lastwinner.getScore()
+    lastwinner.print()
+    print("Total Score: {} x {} = {}".format(lastwinner.score, lastround, lastwinner.score * lastround))        
     return
 
 
