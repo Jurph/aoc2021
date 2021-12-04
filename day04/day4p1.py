@@ -27,13 +27,13 @@ class BingoGame():
                 rows = []
         self.callouts = callouts
         self.boards = boards
-        self.winners = 0
+        self.winners = self.countWinners()
         return
 
     def countWinners(self):
         winners = 0
         for board in self.boards:
-            if board.isWinner():
+            if board.isWinner:
                 winners += 1
         return winners
 
@@ -112,7 +112,7 @@ class BingoBoard():
                 square = row[j]
                 if square.isMarked:
                     sum += 1
-            if sum == self.height:
+            if sum == 5:
                 self.isWinner = True
                 # print("Won with column {}".format(j))
         return
@@ -137,19 +137,28 @@ class BingoBoard():
 def main():
     filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\input.txt"
     game = BingoGame(filename)
+    highscore = 0
+    winners = 0
     for number in game.callouts:
         print("Calling {} now...".format(number))
         for b in game.boards:
             b.mark(number)
-            b.checkWinner()
+            b.checkWinner()            
             if b.isWinner:
+                winners += 1
                 b.getScore()
                 b.print()
                 print("Total Score: {} x {} = {}".format(b.score, number, b.score * number))
-                return
+                for b in game.boards:
+                    if b.isWinner:
+                        b.print()
             else:
                 pass
+        if winners > 0:
+            return
+            
         # j = input()
+    print("High score: {}".format(highscore))
     return
 
 
