@@ -12,7 +12,11 @@ class BingoGame():
     until five marked numbers form a contiguous row or column. The 
     first player to have such an arrangement yells "BINGO" and wins.
 
-    This version is slightly different - see https://adventofcode.com/2021/day/4
+    This version is slightly different from BINGO games you may have played.
+    Diagonals don't count, and boards score points based on their unmarked
+    remaining squares. 
+
+    See https://adventofcode.com/2021/day/4 for full rules. 
     """
 
     def __init__(self, filename):
@@ -54,6 +58,11 @@ class BingoGame():
         return
 
     def countWinners(self):
+        """ 
+        It is possible that more than one player might win on the same turn. This function
+        ensures that we have an accurate count of winners so we can break ties, if they 
+        occur. 
+        """
         winners = 0
         for board in self.boards:
             if board.isWinner:
@@ -62,14 +71,21 @@ class BingoGame():
 
 class BingoSquare():
     """ 
-    A BingoSquare stores its value and marking status.
-    In this game, where unmarked squares are added to score, 
-    a BingoSquare can also tell you whether it contributes to the score. 
+    A BingoSquare stores its integer value and boolean marking status.
+    In this game, where unmarked squares are added to score, a BingoSquare 
+    can also report how many points it contributes to the score.
+
+    - Squares start unmarked unless initialized otherwise
+    - Squares can be marked by calling mark() and unmarked with mark(False)
+
     """
-    
-    def __init__(self, number:int, isMarked=False):
+    def __init__(self, number:int, isMarked:bool=False):
         self.value = number
         self.isMarked = isMarked
+
+    def mark(self, stamp=True):
+        self.isMarked = stamp
+        return
 
     def score(self):
         if self.isMarked:
@@ -77,12 +93,18 @@ class BingoSquare():
         else:
             return int(self.value)
 
-    def mark(self, stamp=True):
-        self.isMarked = stamp
-        return
 
 # A BingoBoard is a grid of BingoSquares
 class BingoBoard():
+    """ 
+    A BingoBoard is a grid of BingoSquares, traditionally 5x5.
+    It must be initialized with a list of 'rowstrings':
+
+    - The number of rows becomes the height
+    - The number of ints parsed out from a rowstring becomes the width
+    
+    This has only been tested with 5x5 layouts.
+    """
     def __init__(self, rowstrings):
         grid = []
         for row in rowstrings:
@@ -116,6 +138,10 @@ class BingoBoard():
         return
 
     def getScore(self):
+        """
+        Asks its squares how much score they are each worth
+        and returns the sum of the score values. 
+        """
         total = 0
         for row in self.grid:
             for square in row:
@@ -149,8 +175,7 @@ class BingoBoard():
             if sum == 5:
                 self.isWinner = True
 
-        # At least in this version, diagonals don't count 
-        # TODO: prepare for a version where they do? 
+        # NOTE: Diagonals do not count (yet)
         return
 
     # A method for pretty-printing a BingoBoard
@@ -160,6 +185,11 @@ class BingoBoard():
             rowstring = "   "
             for square in row:
                 if square.isMarked:
+                    """ 
+                    Uses ANSI escape sequences to mark squares in cyan
+                    See https://bluesock.org/~willkg/dev/ansi.html for
+                    other color options
+                    """ 
                     printstring = "\033[1;36m{0:>2}\033[0;37m".format(str(square.value))
                 else:
                     printstring = str(square.value)
