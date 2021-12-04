@@ -2,9 +2,29 @@
 # Day 4, Part 1 of Advent of Code 2021
 # Playing BINGO with a giant kraken
 
-# BingoGame() is my class that ingests the day's input and structures it for easy computation
+import sys
+import pathlib
+
 class BingoGame():
+    """
+    A BingoGame ingests a file and sets up a game of BINGO.
+    The object of BINGO is to mark off numbers on a randomized grid
+    until five marked numbers form a contiguous row or column. The 
+    first player to have such an arrangement yells "BINGO" and wins.
+
+    This version is slightly different - see https://adventofcode.com/2021/day/4
+    """
+
     def __init__(self, filename):
+        """ 
+        'filename' is a reference to an ASCII text file. 
+        
+        - The first line of the file must be a comma-separated list of integers
+        - The next line must be blank
+        - Thereafter, we expect five lines of five space-separated integers
+        - A newline should separate each set of 25 numbers
+        
+        """
         boards = []
         rows = []
         with open(filename, "r") as file:
@@ -40,10 +60,13 @@ class BingoGame():
                 winners += 1
         return winners
 
-# A BingoSquare stores its value and marking status.
-# In this game, where unmarked squares are added to score,
-# a BingoSquare can also tell you whether it contributes to the score. 
 class BingoSquare():
+    """ 
+    A BingoSquare stores its value and marking status.
+    In this game, where unmarked squares are added to score, 
+    a BingoSquare can also tell you whether it contributes to the score. 
+    """
+    
     def __init__(self, number:int, isMarked=False):
         self.value = number
         self.isMarked = isMarked
@@ -79,6 +102,13 @@ class BingoBoard():
 
     # Call a number, and a BingoBoard.mark() will mark the square
     def mark(self, callout:int, stamp:bool=True):
+        """
+        When a number ('callout') is called out, BingoBoard.mark()
+        will find whether that number exists in its self.grid
+        and mark it with the 'stamp', which defaults to True.
+
+        Unmarking is achieved by setting 'stamp' to False.
+        """
         for row in self.grid:
             for square in row:
                 if square.value == callout:
@@ -134,7 +164,6 @@ class BingoBoard():
                 else:
                     printstring = str(square.value)
                 rowstring += "{0:>2} ".format(printstring)
-            print(rowstring)
         print("Current score: {}".format(self.getScore()))
         self.checkWinner()
         if self.isWinner:
@@ -143,7 +172,15 @@ class BingoBoard():
         return
 
 def main():
-    filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\input.txt"
+    # Parse command-line args to see if a non-default file is specified
+    if len(sys.argv) > 1:
+        filename = pathlib.Path(sys.argv[1])
+    else:
+        filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day04\\test.txt"
+        print("No input file specified.")
+    print("...using {}".format(filename))
+
+    # Initialize the game
     game = BingoGame(filename)
     winners = 0
     for number in game.callouts:
@@ -164,7 +201,6 @@ def main():
         if winners > 0:
             return
     return
-
 
 if __name__ == "__main__":
     main()
