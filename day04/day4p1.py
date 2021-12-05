@@ -47,7 +47,6 @@ class BingoGame():
             if len(rows) < 5: # TODO: if I were smarter I could just take these in chunks of non-newlines
                 rows.append(line.rstrip())
             else:
-                print(rows)
                 boards.append(BingoBoard(rows))
                 rows = []
 
@@ -137,11 +136,10 @@ class BingoBoard():
                     square.mark(stamp)
         return
 
+    
     def getScore(self):
-        """
-        Asks its squares how much score they are each worth
-        and returns the sum of the score values. 
-        """
+        # Asks its squares how much score they are each worth
+        # and returns the sum of the score values. 
         total = 0
         for row in self.grid:
             for square in row:
@@ -179,21 +177,19 @@ class BingoBoard():
         return
 
     # A method for pretty-printing a BingoBoard
-    # Marks squares in cyan and reports its score and/or win status 
     def print(self):
         for row in self.grid:
             rowstring = "   "
             for square in row:
                 if square.isMarked:
-                    """ 
-                    Uses ANSI escape sequences to mark squares in cyan
-                    See https://bluesock.org/~willkg/dev/ansi.html for
-                    other color options
-                    """ 
                     printstring = "\033[1;36m{0:>2}\033[0;37m".format(str(square.value))
+                    """ Uses ANSI escape sequences to mark squares in cyan
+                    See https://bluesock.org/~willkg/dev/ansi.html for
+                    other color options """ 
                 else:
                     printstring = str(square.value)
                 rowstring += "{0:>2} ".format(printstring)
+            print(rowstring)
         print("Current score: {}".format(self.getScore()))
         self.checkWinner()
         if self.isWinner:
