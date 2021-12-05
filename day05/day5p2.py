@@ -40,53 +40,37 @@ class Reading():
         return
 
     def fillPoints(self):
-        # print("\n-=-=-= Calculating points =-=-=-")
         points = [[self.startx, self.starty], [self.endx, self.endy]]
         dist = [self.endx - self.startx, self.endy - self.starty]
-        # print("Starting with {}".format(points))
-        # print("Computed distance vector of {}".format(dist))
         if (dist[0] * dist[1]) != 0: # Must be diagonal
             if dist[0] > dist[1]: # of the form (8, -8) : EndX larger, EndY smaller
-                # print("Diagonal (X, -Y)")
                 for d in range(1, dist[0]):
                     points.append([self.startx + d, self.starty - d])
             elif dist[0] < dist[1]: # of the form (-8, 8) : EndX smaller, EndY larger
-                # print("Diagonal (-X, Y)")
                 for d in range(1, dist[1]):
                     points.append([self.startx - d, self.starty + d])
             elif abs(dist[0]) == dist[0]: # of the form (8, 8) : End points both larger 
-                # print("Diagonal (X, Y)")
                 for d in range(1, abs(dist[0])):
                     points.append([self.startx + d, self.starty + d])
             else: # of the form (-8, -8) : End points both smaller
-                # print("Diagonal (-X, -Y)")
                 for d in range(1, abs(dist[0])):
                     points.append([self.startx - d, self.starty - d])
         elif (dist[1] > 0):
-            # print("Vertical")
             for y in range(self.starty+1, self.endy):
                 points.append([self.startx, y])
-            # print("Made {} vertical points: {}".format(len(range(self.starty, self.endy)), points))
         elif (dist[1] < 0):
-            # print("Vertical")
             for y in range(self.endy+1, self.starty):
                 points.append([self.startx, y])
-            # print("Made {} vertical points: {}".format(len(range(self.starty, self.endy)), points))
         elif (dist[0] > 0):
-            # print("Horizontal")
             for x in range(self.startx+1, self.endx):
                 points.append([x, self.starty])
-            # print("Made {} horizontal points: {}".format(len(range(self.startx, self.endx)), points))
         elif (dist[0] < 0):
-            # print("Horizontal")
             for x in range(self.endx+1, self.startx):
                 points.append([x, self.starty])
-            # print("Made {} horizontal points: {}".format(len(range(self.startx, self.endx)), points))
         else:
-            # print("Skipped??")
+            print("ERROR calculating {} - made no points".format(points))
             points = []
             pass
-            # print("Made no points.")            
         self.pointlist = points
         print(points)
         return
@@ -100,9 +84,10 @@ class SeaFloor():
         return
 
     def addvent(self, xypoint: list, vents=1):
-        x = xypoint[1]
-        y = xypoint[0]
-        self.ventchart[x][y] += vents
+        x = xypoint[0]
+        y = xypoint[1]
+        # We use "y, x" notation so our visualized grid matches the example
+        self.ventchart[y][x] += vents
         return
 
     def countvents(self, dangerlevel=1):
