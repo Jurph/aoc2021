@@ -48,6 +48,17 @@ class BingoSquare():
         self.value = number
         self.isMarked = isMarked
 
+    def __repr__(self):
+        printstring = "BingoSquare("
+        if self.isMarked:
+            r = "\033[1;36m{0:>2}\033[0;37m".format(str(self.value))
+            m = " is marked"
+        else:
+            r = str(self.value)
+            m = " is not marked"
+        printstring += "Value = {} {})".format(r,m)
+        return printstring
+        
     def score(self):
         if self.isMarked:
             return 0
