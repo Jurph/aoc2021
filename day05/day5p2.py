@@ -123,13 +123,17 @@ def main():
         filename = "C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2021\\day05\\test.txt"
         print("No input file specified.")
     print("...using {}".format(filename))
+
+    # Start solving the problem
     survey = Survey(filename)
     f = SeaFloor()
+    dangerlevel = 2
     for r in survey.readings:
         for p in r.pointlist:
             f.addvent(p)
-    print("DANGER SCAN: Found {} vents of Danger Level 2 or worse".format(f.countvents(2)))
-    # f.print()
+    print("DANGER SCAN: Found {} vents of Danger Level {} or worse".format(f.countvents(dangerlevel), dangerlevel))
+    if f.easting < 80:
+        f.print()
     return
 
 if __name__ == "__main__":
