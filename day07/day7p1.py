@@ -5,6 +5,9 @@
 import sys
 import pathlib
 
+def fuelcost(travel: int):
+    return int((travel) * (travel + 1)/2)
+
 def main():
     # Parse command-line args to see if a non-default file is specified
     if len(sys.argv) > 1:
@@ -18,24 +21,19 @@ def main():
     with open(filename, "r") as file:
         survey = list(map(int, file.read().rstrip("\n").split(",")))
 
-    # Count fish at the start
-    fishages = [0]*10
-    for s in survey:
-        fishages[s] += 1
-
-    days = 256
+    # Set left and right bounds
+    left = min(survey)
+    right = max(survey)
 
     # Begin simulation
-    for d in range(1, days+1):
-        for age in range(10):
-            if age == 0:
-                parents = fishages[age]
-            else:
-                fishages[age-1] = fishages[age]
-        fishages[6] += parents
-        fishages[8] = parents
-        parents = 0
-        print("After {} days: {} fish : {}".format(d, sum(fishages), fishages))
+    best = 999999999999999999999999
+    for newposition in range(left, right+1):
+        fuel = 0
+        for position in survey:
+            fuel += fuelcost(abs(newposition - position))
+        if fuel < best:
+            best = fuel
+            print("New optimum: {} fuel at position {}".format(best, newposition))
 
     return
 
