@@ -5,8 +5,9 @@
 import sys
 import pathlib
 
-def fuelcost(travel: int):
-    return int((travel) * (travel + 1)/2)
+def fuelcost(dist: int):
+    # Fuel cost is a Triangular Number
+    return int((dist) * (dist + 1)/2)
 
 def main():
     # Parse command-line args to see if a non-default file is specified
@@ -26,7 +27,7 @@ def main():
     right = max(survey)
 
     # Begin simulation
-    best = 999999999999999999999999
+    best = 999999999
     for newposition in range(left, right+1):
         fuel = 0
         for position in survey:
@@ -34,9 +35,7 @@ def main():
         if fuel < best:
             best = fuel
             print("New optimum: {} fuel at position {}".format(best, newposition))
-
     return
-
 
 
 if __name__ == "__main__":
