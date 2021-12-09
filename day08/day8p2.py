@@ -33,7 +33,11 @@ class SevenSegmentScramble():
         # Set up the list of 10 scrambles 
         # and the list of 4 jumbles 
         for i in tenItemList:
-            scrambles.append(set(i))
+            scrambles.append(set(i)) 
+            # TODO: if you use frozenset, you can use these as keys in a hash table!!
+            # Which changes the whole complexion of the code below but also makes it 
+            # WAAAAY better-er. 
+            # https://docs.python.org/3/library/stdtypes.html#frozenset
 
         # Unscramble four trivial cases
         for abc in scrambles:
@@ -118,6 +122,8 @@ def main():
 
     # File I/O
     p = Problem(filename)
+
+    # Brute force the problem
     total = 0
     for i in range(p.length):
         s = SevenSegmentScramble(p.decks[i], p.quads[i])
