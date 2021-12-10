@@ -41,7 +41,16 @@ def isClose(character):
         return True
     else:
         return False
-        
+
+def score(character):
+    table = {
+        ")" : 3,
+        "]" : 57,
+        "}" : 1197,
+        ">" : 25137
+    }
+    return table.get(character)
+
 def main():
         # Parse command-line args to see if a non-default file is specified
     if len(sys.argv) > 1:
@@ -53,14 +62,31 @@ def main():
     
     # Ingest and format the data
     p = Problem(filename)
-    print("First character: {} \nExpected complement: {}".format(p.strings[0][0], matches(p.strings[0][0])))
+    # print("First character: {} \nExpected complement: {}".format(p.strings[0][0], matches(p.strings[0][0])))
 
     # Set up state variables 
-    pass
+    stack = []
+    totalscore = 0
 
     # Compute an answer
-    pass
-    return
+    for chungus in p.strings:
+        for bracket in chungus:
+            if isOpen(bracket):
+                stack.append(bracket)
+            elif isClose(bracket):
+                if bracket == matches(stack[-1]):
+                    stack.pop()
+                else:
+                    totalscore += score(bracket)
+                    print("Expected {} but found {} instead.".format(matches(stack[-1]),bracket))
+                    break
+            else:
+                pass
+        print("If I got this far, it must be an incomplete line...")
+        pass
+    
+    print("Total score was {}".format(totalscore))
+
 
 if __name__ == "__main__":
     main()
