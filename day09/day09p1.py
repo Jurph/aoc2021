@@ -79,14 +79,12 @@ def main():
 
     # File I/O
     p = Survey(filename)
+
+    # Solve the problem
     print(p.grid)
     p.print()
     j = p.countRiskScore()
     print(j)
-
-    # Brute force the problem
-    total = 0
-
 
 if __name__ == "__main__":
     main()
